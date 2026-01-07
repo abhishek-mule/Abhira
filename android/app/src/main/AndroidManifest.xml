@@ -4,12 +4,18 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
 
    <application
         android:label="GoSecure"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:foregroundServiceType="location|dataSync|mediaPlayback">
+        android:foregroundServiceType="location|dataSync|mediaPlayback|specialUse">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -48,7 +54,7 @@
            android:exported="false"/>
         <service
             android:name="id.flutter.flutter_background_service.BackgroundService"
-            android:foregroundServiceType="location"
+            android:foregroundServiceType="location|specialUse"
         />
 
         <!-- Don't delete the meta-data below.

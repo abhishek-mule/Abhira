@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gosecure/Dashboard/Settings/About.dart';
-import 'package:gosecure/Dashboard/Settings/ChangePin.dart';
-import 'package:gosecure/background_services.dart';
+import 'package:ursafe/Dashboard/Settings/About.dart';
+import 'package:ursafe/Dashboard/Settings/ChangePin.dart';
+import 'package:ursafe/background_services.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -14,6 +14,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool switchValue = false;
+  bool whatsappSwitchValue = false;
   Future<int> checkPIN() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int pin = (prefs.getInt('pin') ?? -1111);
@@ -25,6 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     checkService();
+    checkWhatsAppSetting();
   }
 
   @override
@@ -145,6 +147,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Text(
+                  "WhatsApp Sharing",
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Expanded(child: Divider())
+            ],
+          ),
+          SwitchListTile(
+            onChanged: (val) async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool('whatsapp_share_enabled', val);
+              setState(() {
+                whatsappSwitchValue = val;
+              });
+            },
+            value: whatsappSwitchValue,
+            secondary: CircleAvatar(
+              backgroundColor: Colors.grey[200],
+              child: Center(
+                  child: Image.asset(
+                "assets/whatsapp.png",
+                height: 24,
+              )),
+            ),
+            title: Text("Share on WhatsApp"),
+            subtitle: Text("Share location via WhatsApp when shake detected"),
+          ),
+          Divider(
+            indent: 40,
+            endIndent: 40,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Text(
+              "When enabled, the app will automatically share your location via WhatsApp with your SOS contacts when shake is detected. This provides an additional safety measure for emergencies.",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: Text(
                   "Application",
                   style: TextStyle(fontSize: 20),
                 ),
@@ -190,6 +235,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       switchValue = running;
     });
     return running;
+  }
+
+  Future<void> checkWhatsAppSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      whatsappSwitchValue = prefs.getBool('whatsapp_share_enabled') ?? false;
+    });
   }
 
   void controllSafeShake(bool val) async {

@@ -1,8 +1,10 @@
 import 'dart:async';
-
+import 'dart:math';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 Future<bool> onStart(ServiceInstance service) async {
   print("Service started");
@@ -21,33 +23,109 @@ Future<bool> onStart(ServiceInstance service) async {
     service.stopSelf();
   });
 
-  String screenShake = "Be strong, We are with you!";
-  double lat = 0.0;
-  double long = 0.0;
+  double lastMagnitude = 0;
+  int lastTrigger = 0;
 
-  try {
-    Position userLocation = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    lat = userLocation.latitude;
-    long = userLocation.longitude;
-    await prefs.setStringList("location", [lat.toString(), long.toString()]);
-    print("Location saved: $lat, $long");
-  } catch (e) {
-    print("Error getting location: $e");
-  }
+  // Listen to accelerometer for shake detection
+  userAccelerometerEvents.listen((event) async {
+    final m = sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
 
-  Timer.periodic(Duration(seconds: 1), (timer) async {
+    // threshold + debounce (shake detection)
+    if (m > 18 && DateTime.now().millisecondsSinceEpoch - lastTrigger > 4000) {
+      lastTrigger = DateTime.now().millisecondsSinceEpoch;
+      print("Shake detected! Magnitude: $m");
+
+      final prefs = await SharedPreferences.getInstance();
+      final enabled = prefs.getBool('whatsapp_share_enabled') ?? false;
+
+      if (enabled) {
+        print("WhatsApp sharing enabled, getting location...");
+        try {
+          final pos = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+          print("Location obtained: ${pos.latitude}, ${pos.longitude}");
+          await shareLocationOnWhatsApp(pos.latitude, pos.longitude);
+        } catch (e) {
+          print("Error getting location for WhatsApp sharing: $e");
+        }
+      } else {
+        print("WhatsApp sharing is disabled");
+      }
+    }
+
+    lastMagnitude = m;
+  });
+
+  // Keep service alive with minimal timer
+  Timer.periodic(Duration(seconds: 10), (timer) async {
     service.invoke('update', {
       'current_date': DateTime.now().toIso8601String(),
-      'message': screenShake,
+      'message': "Shake detection active",
     });
   });
 
   return true;
 }
 
-//GET HOME SAFE _ WORK MANAGER SET TO 15 minutes frequency
+Future<void> shareLocationOnWhatsApp(double latitude, double longitude) async {
+  try {
+    print("Starting WhatsApp sharing process...");
+    // Get the SOS contacts
+    final prefs = await SharedPreferences.getInstance();
+    List<String> sosNumbers = prefs.getStringList('sos_numbers') ?? [];
 
+    if (sosNumbers.isEmpty) {
+      print("No SOS contacts found for WhatsApp sharing");
+      return;
+    }
+
+    print("Found ${sosNumbers.length} SOS contacts");
+
+    // Create Google Maps URL
+    String mapsUrl =
+        "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude";
+
+    // Create SOS message
+    String sosMessage = "🚨 EMERGENCY SOS 🚨\n\n"
+        "I need help! My current location is:\n"
+        "📍 $mapsUrl\n\n"
+        "Please check on me immediately!";
+
+    // Encode the message for WhatsApp URL
+    String encodedMessage = Uri.encodeComponent(sosMessage);
+
+    // Share with each SOS contact
+    for (String phoneNumber in sosNumbers) {
+      // Clean the phone number (remove any non-digit characters)
+      String cleanedNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+
+      // Create WhatsApp URL
+      String whatsappUrl = "https://wa.me/$cleanedNumber?text=$encodedMessage";
+
+      print("Attempting to share with: $cleanedNumber");
+
+      // Check if WhatsApp can be launched
+      if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+        try {
+          await launchUrl(Uri.parse(whatsappUrl));
+          print("Shared location on WhatsApp with $cleanedNumber");
+          // Add a small delay between shares
+          await Future.delayed(Duration(seconds: 2));
+        } catch (e) {
+          print("Error launching WhatsApp for $cleanedNumber: $e");
+        }
+      } else {
+        print("Could not launch WhatsApp for $cleanedNumber");
+      }
+    }
+
+    print("WhatsApp sharing process completed");
+  } catch (e) {
+    print("Error in WhatsApp sharing: $e");
+  }
+}
+
+//GET HOME SAFE _ WORK MANAGER SET TO 15 minutes frequency
 // This fumction is attached to get home safe functionality
 // which will send the user location data to his/her selected
 // contact after every 15 minutes.
