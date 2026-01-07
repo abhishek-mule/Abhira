@@ -1,7 +1,9 @@
-name: gosecure
-description: Women safety app with emergency features
+name: ursafe
+description: UrSafe - Comprehensive Women Safety App with Emergency Features, Fake Call, Location Tracking, and Self-Defense Tools
 publish_to: 'none'
-version: 2.0.0+2
+version: 1.0.0+1
+author: Abhishek Mule
+homepage: https://github.com/abhishek-mule/UrSafe
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
