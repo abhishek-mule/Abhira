@@ -54,11 +54,10 @@ class AboutUs extends StatelessWidget {
             sizeFactor: 1.8,
           ),
           AboutCard(
-            desc:
-                "Divij Katyal - VIT\nHarshika Chaudhary - IIT, Mandi\nPrerna Sharma - DTU",
+            desc: "Abhishek Mule - Developer",
             asset: "about",
             subtitle: "Made with ❤️ for Her!",
-            title: "GoSecure Team",
+            title: "UrSafe Team",
             sizeFactor: 2.5,
           ),
           Padding(
@@ -92,7 +91,7 @@ class AboutUs extends StatelessWidget {
                   endIndent: 10,
                 ),
               ),
-              Text("© 2022 Divij Katyal, All rights reserved."),
+              Text("© 2026 Abhishek Mule, All rights reserved."),
               Expanded(
                 child: Divider(
                   indent: 10,
@@ -117,8 +116,8 @@ class AboutUs extends StatelessWidget {
           "assets/GoSecure-logos.png",
           height: 40,
         ),
-        applicationName: "GoSecure - Women Safety",
+        applicationName: "UrSafe - Women Safety",
         applicationLegalese:
-            "GoSecure is providing with a solution to female’s problems, an entirely userfriendly app and a need of the hour, aiming to connect you to the ones who care for you!");
+            "UrSafe is providing with a solution to women's safety problems, an entirely user-friendly app and a need of the hour, aiming to connect you to the ones who care for you!");
   }
 }
