@@ -1,0 +1,31 @@
+// Gradle script applied from settings.gradle to set namespace for Android library plugins
+// that don't declare one (needed for AGP 8.0+).
+
+gradle.beforeProject { project ->
+    project.afterEvaluate {
+        if (project.hasProperty('android')) {
+            def androidExt = project.android
+            
+            // Check if this is a library plugin (not the app module)
+            if (androidExt.class.name.contains('LibraryExtension')) {
+                try {
+                    def currentNamespace = null
+                    try {
+                        currentNamespace = androidExt.namespace
+                    } catch (Exception ignored) {
+                        currentNamespace = null
+                    }
+                    
+                    if (currentNamespace == null || currentNamespace.toString().isEmpty()) {
+                        // Generate a unique namespace based on plugin module path
+                        def namespace = 'com.flutter.plugin.' + project.name.replaceAll(/[^a-zA-Z0-9_]/, '_').toLowerCase()
+                        androidExt.namespace = namespace
+                        println "FlutterPluginFix: Set namespace to '$namespace' for plugin module '${project.path}'"
+                    }
+                } catch (Exception e) {
+                    println "FlutterPluginFix: Could not set namespace for ${project.path}: ${e.message}"
+                }
+            }
+        }
+    }
+}
