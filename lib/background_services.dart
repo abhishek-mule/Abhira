@@ -72,7 +72,7 @@ Future<void> shareLocationOnWhatsApp(double latitude, double longitude) async {
     print("Starting WhatsApp sharing process...");
     // Get the SOS contacts
     final prefs = await SharedPreferences.getInstance();
-    List<String> sosNumbers = prefs.getStringList('sos_numbers') ?? [];
+    List<String> sosNumbers = prefs.getStringList('numbers') ?? [];
 
     if (sosNumbers.isEmpty) {
       print("No SOS contacts found for WhatsApp sharing");
@@ -95,7 +95,10 @@ Future<void> shareLocationOnWhatsApp(double latitude, double longitude) async {
     String encodedMessage = Uri.encodeComponent(sosMessage);
 
     // Share with each SOS contact
-    for (String phoneNumber in sosNumbers) {
+    for (String contactData in sosNumbers) {
+      // Extract phone number from contact format (Name***PhoneNumber)
+      String phoneNumber = contactData.split("***")[1];
+
       // Clean the phone number (remove any non-digit characters)
       String cleanedNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
 
