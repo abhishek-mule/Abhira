@@ -31,8 +31,8 @@ class _AnimatorState extends State<Animator>
   @override
   void dispose() {
     animationController.dispose();
-    super.dispose();
     timer.cancel();
+    super.dispose();
   }
 
   @override
@@ -53,11 +53,12 @@ class _AnimatorState extends State<Animator>
   }
 }
 
-late Timer timer;
+Timer? timer;
 Duration duration = Duration();
 
 Duration wait() {
-  if (!timer.isActive) {
+  if (timer == null || !timer!.isActive) {
+    timer?.cancel();
     timer = Timer(Duration(microseconds: 120), () {
       duration = Duration();
     });
