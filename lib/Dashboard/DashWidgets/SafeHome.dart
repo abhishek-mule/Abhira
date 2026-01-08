@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart' as location_package;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gosecure/Dashboard/ContactScreens/phonebook_view.dart';
+import 'package:ursafe/Dashboard/ContactScreens/phonebook_view.dart';
 
 class SafeHome extends StatefulWidget {
   const SafeHome({super.key});
@@ -178,13 +180,13 @@ class _SafeHomeState extends State<SafeHome> {
                           });
                           if (getHomeActivated) {
                             changeStateOfHomeSafe(true);
-                            // Periodic messaging disabled - SMS plugin removed
+                            startPeriodicLocationSharing(selectedContact);
                             Fluttertoast.showToast(
                                 msg:
-                                    "Periodic location sharing not available - SMS removed");
+                                    "Get Home Safe activated - Location will be shared via WhatsApp every 15 minutes");
                           } else {
                             changeStateOfHomeSafe(false);
-                            // await Workmanager().cancelByTag("3");
+                            stopPeriodicLocationSharing();
                           }
                         },
                         subtitle: Text(
@@ -266,5 +268,72 @@ class _SafeHomeState extends State<SafeHome> {
     numbers = prefs.getStringList("numbers") ?? [];
 
     return numbers;
+  }
+
+  void startPeriodicLocationSharing(int selectedContactIndex) async {
+    // Cancel any existing timer
+    stopPeriodicLocationSharing();
+
+    // Get the selected contact's phone number
+    if (selectedContactIndex >= 0 && selectedContactIndex < numbers.length) {
+      String contactData = numbers[selectedContactIndex];
+      String phoneNumber = contactData.split("***")[1];
+
+      // Start periodic timer (15 minutes = 900 seconds)
+      timer = Timer.periodic(Duration(minutes: 15), (Timer t) async {
+        try {
+          // Get current location
+          Position position = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+
+          // Share location via WhatsApp
+          await shareLocationOnWhatsApp(
+              phoneNumber, position.latitude, position.longitude);
+        } catch (e) {
+          print("Error in periodic location sharing: $e");
+        }
+      });
+    }
+  }
+
+  void stopPeriodicLocationSharing() {
+    if (timer != null) {
+      timer.cancel();
+      timer = null;
+    }
+  }
+
+  Future<void> shareLocationOnWhatsApp(
+      String phoneNumber, double latitude, double longitude) async {
+    try {
+      // Clean the phone number (remove any non-digit characters)
+      String cleanedNumber = phoneNumber.replaceAll(RegExp(r'[^0-9]'), '');
+
+      // Create Google Maps URL
+      String mapsUrl =
+          "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude";
+
+      // Create location sharing message
+      String message = "🏠 GET HOME SAFE UPDATE 🏠\n\n"
+          "I'm on my way home. My current location is:\n"
+          "📍 $mapsUrl\n\n"
+          "This is an automated location update.";
+
+      // Encode the message for WhatsApp URL
+      String encodedMessage = Uri.encodeComponent(message);
+
+      // Create WhatsApp URL
+      String whatsappUrl = "https://wa.me/$cleanedNumber?text=$encodedMessage";
+
+      // Check if WhatsApp can be launched
+      if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+        await launchUrl(Uri.parse(whatsappUrl));
+        print("Shared periodic location on WhatsApp with $cleanedNumber");
+      } else {
+        print("Could not launch WhatsApp for periodic sharing");
+      }
+    } catch (e) {
+      print("Error sharing location on WhatsApp: $e");
+    }
   }
 }
