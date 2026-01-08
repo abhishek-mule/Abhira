@@ -167,7 +167,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               backgroundColor: Colors.grey[200],
               child: Center(
                   child: Image.asset(
-                "assets/whatsapp.png",
+                "assets/share.png",
                 height: 24,
               )),
             ),
