@@ -12,7 +12,10 @@ class LiveFeed extends StatefulWidget {
 class Vector3 {
   double x, y, z;
   Vector3(this.x, this.y, this.z);
-  Vector3.zero() : x = 0, y = 0, z = 0;
+  Vector3.zero()
+      : x = 0,
+        y = 0,
+        z = 0;
   void setFrom(Vector3 other) {
     x = other.x;
     y = other.y;
@@ -30,7 +33,7 @@ class _LiveFeedState extends State<LiveFeed> {
   late Vector3 _absoluteOrientation = Vector3.zero();
   late Vector3 _absoluteOrientation2 = Vector3.zero();
   late List<double> _rotation = List.filled(9, 0);
-  
+
   late int _groupValue;
 
   @override
@@ -105,7 +108,9 @@ class _LiveFeedState extends State<LiveFeed> {
 
   @override
   void dispose() {
-    _cameraController.dispose();
+    if (_cameraController.value.isInitialized) {
+      _cameraController.dispose();
+    }
     super.dispose();
   }
 
