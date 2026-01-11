@@ -9,7 +9,7 @@
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <p align="center">
-  <img src="assets/women.png" width="90%" height="400" />
+  <img src="https://ibb.co/0j7qBsdq" width="90%" height="400" />
 </p>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
