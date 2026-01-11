@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ursafe/Dashboard/Settings/About.dart';
-import 'package:ursafe/Dashboard/Settings/ChangePin.dart';
-import 'package:ursafe/background_services.dart';
+import 'package:abhira/Dashboard/Settings/About.dart';
+import 'package:abhira/Dashboard/Settings/ChangePin.dart';
+import 'package:abhira/Dashboard/Settings/ShareAppScreen.dart';
+import 'package:abhira/background_services.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -178,6 +179,31 @@ class _SettingsScreenState extends State<SettingsScreen> {
             indent: 40,
             endIndent: 40,
           ),
+          SwitchListTile(
+            onChanged: (val) async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setBool('shake_notifications_enabled', val);
+              setState(() {
+                // Update state if needed
+              });
+            },
+            value: true, // Default to enabled
+            secondary: CircleAvatar(
+              backgroundColor: Colors.grey[200],
+              child: Center(
+                  child: Icon(
+                Icons.notifications_rounded,
+                color: Color(0xFF10B981),
+                size: 24,
+              )),
+            ),
+            title: Text("Shake Notifications"),
+            subtitle: Text("Show toast notifications when shake is detected"),
+          ),
+          Divider(
+            indent: 40,
+            endIndent: 40,
+          ),
           Padding(
             padding: const EdgeInsets.all(18.0),
             child: Text(
@@ -199,6 +225,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           ListTile(
             onTap: () {
+              _showEditSOSMessageDialog(context);
+            },
+            title: Text("Edit SOS Message"),
+            subtitle: Text("Customize the emergency message sent via WhatsApp"),
+            leading: CircleAvatar(
+              backgroundColor: Colors.grey[200],
+              child: Center(
+                  child: Icon(
+                Icons.message_rounded,
+                color: Color(0xFFEF4444),
+                size: 24,
+              )),
+            ),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+          ),
+          Divider(
+            indent: 40,
+            endIndent: 40,
+          ),
+          ListTile(
+            onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => AboutUs()));
             },
@@ -213,7 +260,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           ListTile(
-            title: Text("Share"),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ShareAppScreen(),
+                ),
+              );
+            },
+            title: Text("Share App"),
+            subtitle: Text("Share Abhira with QR code and download link"),
             leading: CircleAvatar(
               backgroundColor: Colors.grey[200],
               child: Center(
@@ -222,6 +278,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 height: 24,
               )),
             ),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16),
           ),
         ],
       ),
@@ -252,5 +309,97 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // Stop the service using invoke
       service.invoke("stopService", {"action": "stopService"});
     }
+  }
+
+  void _showEditSOSMessageDialog(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    final currentMessage = prefs.getString('custom_sos_message') ??
+        "🚨 EMERGENCY SOS ALERT 🚨\n\nI need immediate help! Please check my location:\n\n{LOCATION}\n\nThis is an automated emergency message from my safety app.";
+
+    final TextEditingController messageController =
+        TextEditingController(text: currentMessage);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.message_rounded, color: Color(0xFFEF4444)),
+              SizedBox(width: 12),
+              Text('Edit SOS Message'),
+            ],
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Customize the emergency message sent via WhatsApp. Use {LOCATION} as a placeholder for the Google Maps link.',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+                SizedBox(height: 16),
+                TextField(
+                  controller: messageController,
+                  maxLines: 8,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    hintText: 'Enter your custom SOS message...',
+                    contentPadding: EdgeInsets.all(12),
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Preview: {LOCATION} will be replaced with actual Google Maps link',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final message = messageController.text.trim();
+                if (message.isNotEmpty) {
+                  await prefs.setString('custom_sos_message', message);
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('SOS message updated successfully!'),
+                      backgroundColor: Color(0xFF10B981),
+                    ),
+                  );
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFFEF4444),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

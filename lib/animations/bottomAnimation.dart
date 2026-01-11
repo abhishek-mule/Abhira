@@ -77,3 +77,4 @@ class WidgetAnimator extends StatelessWidget {
     return Animator(child, wait());
   }
 }
+

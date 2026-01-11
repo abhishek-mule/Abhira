@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:gosecure/SelfDefence/ho.dart';
+import 'package:abhira/SelfDefence/ho.dart';
 
 class Defence extends StatelessWidget {
   const Defence({super.key});
@@ -78,3 +78,4 @@ class Defence extends StatelessWidget {
     await FlutterPhoneDirectCaller.callNumber(number);
   }
 }
+

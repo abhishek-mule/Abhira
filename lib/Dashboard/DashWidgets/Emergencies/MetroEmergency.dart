@@ -22,15 +22,14 @@ class MetroEmergency extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.7,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFFFD8080),
-                  Color(0xFFFB8580),
-                  Color(0xFFFBD079),
-                ],
-              ),
+              color: Colors.green.shade600,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.green.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -53,16 +52,17 @@ class MetroEmergency extends StatelessWidget {
                       Text(
                         "Delhi Metro Helpline",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: MediaQuery.of(context).size.width * 0.06),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                       Text(
                         "Tap to call CISF metro helpline",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize:
-                                MediaQuery.of(context).size.width * 0.035),
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                       Container(
@@ -75,9 +75,9 @@ class MetroEmergency extends StatelessWidget {
                           child: Text(
                             "2 -2 -1 -8 -5 -5 -5 -5",
                             style: TextStyle(
-                                color: Colors.red[300],
+                                color: Colors.green.shade900,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18),
+                                fontSize: 14),
                           ),
                         ),
                       ),
@@ -96,3 +96,4 @@ class MetroEmergency extends StatelessWidget {
     await FlutterPhoneDirectCaller.callNumber(number);
   }
 }
+

@@ -22,15 +22,14 @@ class AmbulanceEmergency extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.7,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFFFD8080),
-                  Color(0xFFFB8580),
-                  Color(0xFFFBD079),
-                ],
-              ),
+              color: Colors.blue.shade600,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -53,15 +52,16 @@ class AmbulanceEmergency extends StatelessWidget {
                       Text(
                         "Ambulance",
                         style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: MediaQuery.of(context).size.width * 0.06),
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
                       ),
                       Text(
                         "Tap to call for medical emergency",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: MediaQuery.of(context).size.width * 0.035,
+                          fontSize: 14,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -75,9 +75,9 @@ class AmbulanceEmergency extends StatelessWidget {
                           child: Text(
                             "1 -0 -2",
                             style: TextStyle(
-                                color: Colors.red[300],
+                                color: Colors.blue.shade900,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 18),
+                                fontSize: 14),
                           ),
                         ),
                       ),
@@ -96,3 +96,4 @@ class AmbulanceEmergency extends StatelessWidget {
 _callNumber(number) async {
   await FlutterPhoneDirectCaller.callNumber(number);
 }
+

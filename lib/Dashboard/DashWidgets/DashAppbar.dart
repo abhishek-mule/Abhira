@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gosecure/Dashboard/Settings/SettingsScreen.dart';
-import 'package:gosecure/constants.dart';
+import 'package:abhira/Dashboard/Settings/SettingsScreen.dart';
+import 'package:abhira/constants.dart';
 
 class DashAppbar extends StatefulWidget {
   final Function getRandomInt;
@@ -41,9 +41,10 @@ class _DashAppbarState extends State<DashAppbar> {
         child: Text(
           sweetSayings[widget.quoteIndex][1],
           style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-              fontSize: MediaQuery.of(context).size.width * 0.055),
+            color: Colors.black,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
         ),
       ),
       trailing: Card(
@@ -66,3 +67,4 @@ class _DashAppbarState extends State<DashAppbar> {
     );
   }
 }
+

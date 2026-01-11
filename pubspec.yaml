@@ -28,8 +28,7 @@ dependencies:
   location: ^5.0.3
 
   # Sensors
-  sensors_plus: ^6.0.0
-  shake: ^3.0.0
+  sensors_plus: ^7.0.0
   sound_mode: ^2.0.2
 
   # Communication
@@ -127,7 +126,7 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/icons/abhira.png"
+  image_path: "assets/abhira_app_launcher.jpg"
 
 flutter:
   uses-material-design: true

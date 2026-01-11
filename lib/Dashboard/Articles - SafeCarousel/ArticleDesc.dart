@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gosecure/constants.dart';
+import 'package:abhira/constants.dart';
 
 class ArticleDesc extends StatelessWidget {
   final int index;
@@ -51,14 +51,14 @@ class ArticleDesc extends StatelessWidget {
           ),
           ArticleImage(
               imageStr:
-                  "https://www.unwomen.org/-/media/headquarters/images/sections/news/stories/2017/11/fiji_varanisesemaisamoa_rakirakimarket_1_675pxwide.jpg?la=en&vs=1317"),
+              "https://www.unwomen.org/-/media/headquarters/images/sections/news/stories/2017/11/fiji_varanisesemaisamoa_rakirakimarket_1_675pxwide.jpg?la=en&vs=1317"),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(articles[0][0]),
           ),
           ArticleImage(
               imageStr:
-                  "https://www.unwomen.org/-/media/headquarters/images/sections/news/stories/2018/8/tanzania_daressalaam_bettyjaphet-mtewelle_mchikinimarketvendor_august2018_002_1_960x640.jpg?la=en&vs=4847"),
+              "https://www.unwomen.org/-/media/headquarters/images/sections/news/stories/2018/8/tanzania_daressalaam_bettyjaphet-mtewelle_mchikinimarketvendor_august2018_002_1_960x640.jpg?la=en&vs=4847"),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Text(articles[0][1]),
@@ -98,3 +98,4 @@ class ArticleImage extends StatelessWidget {
     );
   }
 }
+

@@ -15,3 +15,4 @@ class SizeConfig {
     blockV = screenH / 100;
   }
 }
+

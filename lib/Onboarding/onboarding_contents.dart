@@ -12,47 +12,53 @@ class OnboardingContents {
 
 List<OnboardingContents> contents = [
   OnboardingContents(
-    title: "Too Fear to walk alone?",
+    title: "Walking alone and feeling unsafe?",
     image: "assets/1.png",
     desc:
-        "Let's help you!\nUse GoSecure's great features to ensure your personal safety",
+        "You’re not alone. Abhira gives you tools to stay visible, connected, and protected when it matters most.",
   ),
   OnboardingContents(
-    title: "Personalized Conversational AI Assistant",
+    title: "Smart Safety AI Assistant",
     image: "assets/54960780.png",
     desc:
-        "Your Empathetic Companion!!\nYou can tap on the assistant and say 'HELLO' to get it introduced to you",
+        "Talk naturally. Ask for help, guidance, or quick actions. Just say Hello — it responds instantly when you need support.",
   ),
   OnboardingContents(
-    title: "Send Alerts with Live Location!",
+    title: "Instant SOS with Live Location",
     image: "assets/icons/alert1.png",
-    desc: "Share instant alerts with your loved ones in just one tap",
+    desc:
+        "Send emergency alerts with real-time location to trusted contacts in one tap — no delays, no confusion.",
   ),
   OnboardingContents(
-    title: "Shake detector",
+    title: "Shake to Trigger SOS",
     image: "assets/shake.png",
-    desc: "GoSecure detects shake frequency to send alerts",
+    desc:
+        "In danger and can’t unlock your phone? Shake your device to auto-send alerts and location immediately.",
   ),
   OnboardingContents(
-    title: "Help at your fingertips",
+    title: "Direct Help Lines",
     image: "assets/women.png",
-    desc: "GoSecure instantly connects you with the concerned authorities",
+    desc:
+        "Call official support authorities instantly. No searching, no scrolling — help is one swipe away.",
   ),
   OnboardingContents(
-    title: "Periodic Location Updates",
+    title: "Live Location Tracking",
     image: "assets/liveloc.png",
     desc:
-        "Share location periodically with your loved ones to help them track you",
+        "Share your movement automatically at intervals so your trusted contacts always know you’re safe.",
   ),
   OnboardingContents(
-    title: "Spy Camera Detector",
+    title: "Hidden Camera & Spy Device Detection",
     image: "assets/spy.png",
     desc:
-        "GoSecure uses magnetometers and gyroscopes sensors to detect spy camera",
+        "Abhira scans magnetic fields and sensor patterns to help you detect suspicious hidden devices around you.",
   ),
   OnboardingContents(
-    title: "Personal Safety at your Fingertips",
+    title: "Your Safety. Your Control.",
     image: "assets/1.png",
-    desc: "Always Stay Connected for a safer walk\nFight Back! Be Alert!",
+    desc:
+        "Stay alert. Stay prepared. Keep your circle informed — confidence replaces fear when you’re equipped.",
   ),
 ];
+
+//

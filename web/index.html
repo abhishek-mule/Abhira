@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+    <meta name="description" content="Abhira web">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abhira</title>
+    <link rel="manifest" href="/manifest.json">
+    <script>
+      // Prevent the browser from caching assets during dev.
+      if (location.search.indexOf('cachebust') !== -1) {
+        window.sessionStorage.clear();
+      }
+    </script>
+  </head>
+  <body>
+    <script src="main.dart.js" type="application/javascript"></script>
+  </body>
+</html>
