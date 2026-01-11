@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gosecure/Dashboard/Settings/AboutCard.dart';
+import 'package:abhira/Dashboard/Settings/AboutCard.dart';
 
 class AboutUs extends StatelessWidget {
   const AboutUs({super.key});
@@ -48,16 +48,16 @@ class AboutUs extends StatelessWidget {
           AboutCard(
             asset: "GoSecure-logos",
             desc:
-                """GoSecure is a vigilant mobile application that enables the user to stay connected with the ones who care! It gives the user an option to share live location to concerned people through SOS alerts and enables the user to access emergency services. Be a witness of the unfortunate occurring incident and call for help. It is your personal companion.""",
+                """Abhira is a vigilant mobile application that enables the user to stay connected with the ones who care! It gives the user an option to share live location to concerned people through SOS alerts and enables the user to access emergency services. Be a witness of the unfortunate occurring incident and call for help. It is your personal companion.""",
             subtitle: "You Deserve to be safe!",
-            title: "GoSecure",
+            title: "Abhira",
             sizeFactor: 1.8,
           ),
           AboutCard(
             desc: "Abhishek Mule - Developer",
             asset: "about",
             subtitle: "Made with ❤️ for Her!",
-            title: "UrSafe Team",
+            title: "Abhira Team",
             sizeFactor: 2.5,
           ),
           Padding(
@@ -116,8 +116,9 @@ class AboutUs extends StatelessWidget {
           "assets/GoSecure-logos.png",
           height: 40,
         ),
-        applicationName: "UrSafe - Women Safety",
+        applicationName: "Abhira - Women Safety",
         applicationLegalese:
-            "UrSafe is providing with a solution to women's safety problems, an entirely user-friendly app and a need of the hour, aiming to connect you to the ones who care for you!");
+            "Abhira is providing with a solution to women's safety problems, an entirely user-friendly app and a need of the hour, aiming to connect you to the ones who care for you!");
   }
 }
+

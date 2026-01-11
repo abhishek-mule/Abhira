@@ -27,34 +27,39 @@ Future<bool> onStart(ServiceInstance service) async {
   int lastTrigger = 0;
 
   // Listen to accelerometer for shake detection
-  userAccelerometerEvents.listen((event) async {
-    final m = sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
+  try {
+    userAccelerometerEvents.listen((event) async {
+      final m = sqrt(event.x * event.x + event.y * event.y + event.z * event.z);
 
-    // threshold + debounce (shake detection)
-    if (m > 18 && DateTime.now().millisecondsSinceEpoch - lastTrigger > 4000) {
-      lastTrigger = DateTime.now().millisecondsSinceEpoch;
-      print("Shake detected! Magnitude: $m");
+      // threshold + debounce (shake detection)
+      if (m > 18 &&
+          DateTime.now().millisecondsSinceEpoch - lastTrigger > 4000) {
+        lastTrigger = DateTime.now().millisecondsSinceEpoch;
+        print("Shake detected! Magnitude: $m");
 
-      final prefs = await SharedPreferences.getInstance();
-      final enabled = prefs.getBool('whatsapp_share_enabled') ?? false;
+        final prefs = await SharedPreferences.getInstance();
+        final enabled = prefs.getBool('whatsapp_share_enabled') ?? false;
 
-      if (enabled) {
-        print("WhatsApp sharing enabled, getting location...");
-        try {
-          final pos = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
-          print("Location obtained: ${pos.latitude}, ${pos.longitude}");
-          await shareLocationOnWhatsApp(pos.latitude, pos.longitude);
-        } catch (e) {
-          print("Error getting location for WhatsApp sharing: $e");
+        if (enabled) {
+          print("WhatsApp sharing enabled, getting location...");
+          try {
+            final pos = await Geolocator.getCurrentPosition(
+                desiredAccuracy: LocationAccuracy.high);
+            print("Location obtained: ${pos.latitude}, ${pos.longitude}");
+            await shareLocationOnWhatsApp(pos.latitude, pos.longitude);
+          } catch (e) {
+            print("Error getting location for WhatsApp sharing: $e");
+          }
+        } else {
+          print("WhatsApp sharing is disabled");
         }
-      } else {
-        print("WhatsApp sharing is disabled");
       }
-    }
 
-    lastMagnitude = m;
-  });
+      lastMagnitude = m;
+    });
+  } catch (e) {
+    print("Error initializing accelerometer for shake detection: $e");
+  }
 
   // Keep service alive with minimal timer
   Timer.periodic(Duration(seconds: 10), (timer) async {
@@ -85,11 +90,12 @@ Future<void> shareLocationOnWhatsApp(double latitude, double longitude) async {
     String mapsUrl =
         "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude";
 
-    // Create SOS message
-    String sosMessage = "🚨 EMERGENCY SOS 🚨\n\n"
-        "I need help! My current location is:\n"
-        "📍 $mapsUrl\n\n"
-        "Please check on me immediately!";
+    // Load custom SOS message or use default
+    String customMessage = prefs.getString('custom_sos_message') ??
+        "🚨 EMERGENCY SOS ALERT 🚨\n\nI need immediate help! Please check my location:\n\n{LOCATION}\n\nThis is an automated emergency message from my safety app.";
+
+    // Replace {LOCATION} placeholder with actual Google Maps link
+    String sosMessage = customMessage.replaceAll('{LOCATION}', mapsUrl);
 
     // Encode the message for WhatsApp URL
     String encodedMessage = Uri.encodeComponent(sosMessage);

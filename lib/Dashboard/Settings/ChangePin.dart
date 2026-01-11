@@ -255,3 +255,4 @@ class _ChangePinScreenState extends State<ChangePinScreen> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
+

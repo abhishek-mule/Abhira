@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
-import 'package:gosecure/HiddenCamera/detection.dart';
+import 'package:abhira/HiddenCamera/detection.dart';
 
 import '../../../main.dart';
 
@@ -76,3 +76,4 @@ class CameraDetection extends StatelessWidget {
     );
   }
 }
+

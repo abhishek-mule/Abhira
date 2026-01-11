@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gosecure/Dashboard/DashWidgets/OtherFeatures/CameraDetection.dart';
-import 'package:gosecure/Dashboard/DashWidgets/OtherFeatures/Complaint.dart';
-import 'package:gosecure/Dashboard/DashWidgets/OtherFeatures/FakeCall.dart';
-import 'package:gosecure/Dashboard/DashWidgets/OtherFeatures/SelfDefence.dart';
+import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/CameraDetection.dart';
+import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/Complaint.dart';
+import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/FakeCall.dart';
+import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/SelfDefence.dart';
 
 class OtherFeature extends StatelessWidget {
   const OtherFeature({super.key});
@@ -15,7 +15,28 @@ class OtherFeature extends StatelessWidget {
       child: ListView(
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        children: [FakeCall(), Complaint(), CameraDetection(), Defence()],
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width * 0.65,
+            margin: const EdgeInsets.only(right: 12),
+            child: const FakeCall(),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.65,
+            margin: const EdgeInsets.only(right: 12),
+            child: const Complaint(),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.65,
+            margin: const EdgeInsets.only(right: 12),
+            child: const CameraDetection(),
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.65,
+            child: const Defence(),
+          ),
+        ],
       ),
     );
   }

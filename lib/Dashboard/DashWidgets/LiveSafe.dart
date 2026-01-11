@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:gosecure/Dashboard/DashWidgets/LiveSafeSpots/BusStationCard.dart';
-import 'package:gosecure/Dashboard/DashWidgets/LiveSafeSpots/HospitalCard.dart';
-import 'package:gosecure/Dashboard/DashWidgets/LiveSafeSpots/PharmacyCard.dart';
-import 'package:gosecure/Dashboard/DashWidgets/LiveSafeSpots/PoliceStationCard.dart';
+import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/BusStationCard.dart';
+import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/HospitalCard.dart';
+import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/PharmacyCard.dart';
+import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/PoliceStationCard.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -44,3 +44,4 @@ class LiveSafe extends StatelessWidget {
     // }
   }
 }
+

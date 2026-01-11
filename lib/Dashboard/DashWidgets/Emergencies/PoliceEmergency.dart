@@ -22,15 +22,14 @@ class PoliceEmergency extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.7,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFFFD8080),
-                  Color(0xFFFB8580),
-                  Color(0xFFFBD079),
-                ],
-              ),
+              color: Colors.red.shade400,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.red.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -53,17 +52,17 @@ class PoliceEmergency extends StatelessWidget {
                         Text(
                           "Active Emergency",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.06),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
                         Text(
                           "Tap to call for emergencies.",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize:
-                                  MediaQuery.of(context).size.width * 0.035),
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
                           overflow: TextOverflow.ellipsis,
                         ),
                         Container(
@@ -76,9 +75,9 @@ class PoliceEmergency extends StatelessWidget {
                             child: Text(
                               "1 -1 -2",
                               style: TextStyle(
-                                  color: Colors.red[300],
+                                  color: Colors.red.shade900,
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 18),
+                                  fontSize: 14),
                             ),
                           ),
                         ),
@@ -98,3 +97,4 @@ class PoliceEmergency extends StatelessWidget {
     await FlutterPhoneDirectCaller.callNumber(number);
   }
 }
+

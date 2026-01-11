@@ -80,7 +80,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           title: const Row(
             children: [
               Icon(Icons.info_outline, color: Colors.blue),
@@ -151,12 +152,12 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
         ),
         const SizedBox(height: 8),
         ...items.map((item) => Padding(
-          padding: const EdgeInsets.only(left: 8, bottom: 4),
-          child: Text(
-            '• $item',
-            style: const TextStyle(fontSize: 13, height: 1.4),
-          ),
-        )),
+              padding: const EdgeInsets.only(left: 8, bottom: 4),
+              child: Text(
+                '• $item',
+                style: const TextStyle(fontSize: 13, height: 1.4),
+              ),
+            )),
       ],
     );
   }
@@ -168,7 +169,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
     )..repeat();
 
     _scanAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _scanAnimationController, curve: Curves.easeInOut),
+      CurvedAnimation(
+          parent: _scanAnimationController, curve: Curves.easeInOut),
     );
 
     _pulseAnimationController = AnimationController(
@@ -177,7 +179,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
     )..repeat(reverse: true);
 
     _pulseAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _pulseAnimationController, curve: Curves.easeInOut),
+      CurvedAnimation(
+          parent: _pulseAnimationController, curve: Curves.easeInOut),
     );
   }
 
@@ -203,7 +206,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
   }
 
   void _initializeSensors() {
-    _magnetometerSubscription = magnetometerEvents.listen((MagnetometerEvent event) {
+    _magnetometerSubscription =
+        magnetometerEvents.listen((MagnetometerEvent event) {
       if (mounted) {
         final newMag = Vector3(event.x, event.y, event.z);
         setState(() {
@@ -217,7 +221,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
     // Calculate baseline after 2 seconds
     Future.delayed(const Duration(seconds: 2), () {
       if (_magneticHistory.length >= 20) {
-        _baselineMagneticField = _magneticHistory.reduce((a, b) => a + b) / _magneticHistory.length;
+        _baselineMagneticField =
+            _magneticHistory.reduce((a, b) => a + b) / _magneticHistory.length;
         setState(() {});
       }
     });
@@ -241,12 +246,16 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
     _detections.clear();
 
     // Calculate statistics
-    final recentAverage = _recentReadings.reduce((a, b) => a + b) / _recentReadings.length;
+    final recentAverage =
+        _recentReadings.reduce((a, b) => a + b) / _recentReadings.length;
     final deviation = (recentAverage - _baselineMagneticField).abs();
     final deviationPercentage = (deviation / _baselineMagneticField) * 100;
 
     // Calculate variance (for spike detection)
-    final variance = _recentReadings.map((v) => pow(v - recentAverage, 2)).reduce((a, b) => a + b) / _recentReadings.length;
+    final variance = _recentReadings
+            .map((v) => pow(v - recentAverage, 2))
+            .reduce((a, b) => a + b) /
+        _recentReadings.length;
     final standardDeviation = sqrt(variance);
 
     // Detection 1: Strong EMF Source
@@ -255,7 +264,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
       _detections.add(DetectionResult(
         type: 'Strong EMF Detected',
         confidence: min((deviationPercentage / 50 * 100), 100),
-        description: 'Significant electromagnetic field detected. Could be electronic device, wiring, or metal objects.',
+        description:
+            'Significant electromagnetic field detected. Could be electronic device, wiring, or metal objects.',
         color: Colors.red,
         icon: Icons.electrical_services,
       ));
@@ -263,7 +273,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
       _detections.add(DetectionResult(
         type: 'Moderate EMF Activity',
         confidence: min((deviationPercentage / 40 * 100), 100),
-        description: 'Unusual magnetic field pattern. Move device slowly around the area.',
+        description:
+            'Unusual magnetic field pattern. Move device slowly around the area.',
         color: Colors.orange,
         icon: Icons.warning_amber,
       ));
@@ -274,7 +285,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
       _detections.add(DetectionResult(
         type: 'Fluctuating Magnetic Field',
         confidence: min((standardDeviation / 10 * 100), 100),
-        description: 'Rapid field changes detected. May indicate active electronic device with varying current.',
+        description:
+            'Rapid field changes detected. May indicate active electronic device with varying current.',
         color: Colors.deepOrange,
         icon: Icons.show_chart,
       ));
@@ -285,7 +297,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
       _detections.add(DetectionResult(
         type: 'Persistent Anomaly',
         confidence: 85.0,
-        description: 'Consistent high readings in this location. Investigate visually for hidden devices.',
+        description:
+            'Consistent high readings in this location. Investigate visually for hidden devices.',
         color: Colors.red.shade700,
         icon: Icons.location_searching,
       ));
@@ -296,7 +309,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
       _detections.add(DetectionResult(
         type: 'Normal Readings',
         confidence: 100.0,
-        description: 'No significant EMF anomalies detected. Move slowly around suspicious areas.',
+        description:
+            'No significant EMF anomalies detected. Move slowly around suspicious areas.',
         color: Colors.green,
         icon: Icons.check_circle,
       ));
@@ -310,7 +324,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
       _isScanning = !_isScanning;
       if (_isScanning) {
         _strongAnomalyCount = 0;
-        _analysisTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+        _analysisTimer =
+            Timer.periodic(const Duration(milliseconds: 500), (timer) {
           if (_scanMode == 'magnetic') {
             _analyzeMagneticField();
           }
@@ -330,9 +345,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
     });
 
     try {
-      await _cameraController!.setFlashMode(
-        _useFlashlight ? FlashMode.torch : FlashMode.off
-      );
+      await _cameraController!
+          .setFlashMode(_useFlashlight ? FlashMode.torch : FlashMode.off);
     } catch (e) {
       debugPrint('Flash toggle error: $e');
     }
@@ -364,7 +378,9 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
 
   Widget _buildMagneticFieldCard() {
     final deviation = _baselineMagneticField > 0
-        ? ((_magneticFieldStrength - _baselineMagneticField).abs() / _baselineMagneticField * 100)
+        ? ((_magneticFieldStrength - _baselineMagneticField).abs() /
+            _baselineMagneticField *
+            100)
         : 0.0;
 
     return Container(
@@ -398,7 +414,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: _getThreatColor().withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
@@ -514,7 +531,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: detection.color,
                         borderRadius: BorderRadius.circular(12),
@@ -575,7 +593,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
           const SizedBox(height: 12),
           _buildInstruction('1', 'Move device slowly around suspicious areas'),
           _buildInstruction('2', 'Watch for persistent high EMF readings'),
-          _buildInstruction('3', 'Use flashlight mode to check for lens reflections'),
+          _buildInstruction(
+              '3', 'Use flashlight mode to check for lens reflections'),
           _buildInstruction('4', 'Visually inspect areas with anomalies'),
         ],
       ),
@@ -695,7 +714,10 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
                     animation: _scanAnimation,
                     builder: (context, child) {
                       return Positioned(
-                        top: MediaQuery.of(context).size.height * 0.3 * _scanAnimation.value - 2,
+                        top: MediaQuery.of(context).size.height *
+                                0.3 *
+                                _scanAnimation.value -
+                            2,
                         left: 0,
                         right: 0,
                         child: Container(
@@ -724,7 +746,8 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
                   bottom: 12,
                   left: 12,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.7),
                       borderRadius: BorderRadius.circular(20),
@@ -800,8 +823,7 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
                     ),
                     ..._detections.map((d) => _buildDetectionCard(d)),
                   ],
-                  if (!_isScanning)
-                    _buildInstructionCard(),
+                  if (!_isScanning) _buildInstructionCard(),
                   const SizedBox(height: 20),
                 ],
               ),
@@ -812,4 +834,4 @@ class _LiveFeedState extends State<LiveFeed> with TickerProviderStateMixin {
     );
   }
 }
-}
+

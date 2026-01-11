@@ -1,0 +1,32 @@
+{
+  "project_info": {
+    "project_number": "415322502856",
+    "project_id": "abhira-3ff53",
+    "storage_bucket": "abhira-3ff53.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415322502856:android:34226cbb52ec8ec30e57fd",
+        "android_client_info": {
+          "package_name": "com.divijkapps.gosecure"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3V3aEnY_tns6Kh4_eol-MLHxxuGHlHUw"
+        },
+        {
+          "current_key": "AIzaSyBDlmB4m1SlxiGw_H0eQ70OchnyWyfXUzc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

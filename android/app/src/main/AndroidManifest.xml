@@ -16,7 +16,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false"/>
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
    <application
-        android:label="GoSecure"
+       android:label="Abhira"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:foregroundServiceType="location|dataSync|mediaPlayback|specialUse">
