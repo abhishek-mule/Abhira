@@ -1,7 +1,7 @@
 # Abhira - Women's Safety App
 
 <h1 align="center">
-  <img width="20%" height="50%" alt="Abhira" src="https://ibb.co/Swp8mbbY">
+  <img width="20%" height="50%" alt="Abhira" src="https://i.ibb.co/Swp8mbbY/abhira-logo.png">
 </h1>
 
 <h1 align="center">🛡️ Abhira - Your Safety, Our Priority</h1>
