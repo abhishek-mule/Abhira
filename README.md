@@ -127,11 +127,11 @@ abhira/
 
 | Feature | Screenshot | Description |
 |---------|------------|-------------|
-| **Onboarding** | <img src="assets/1.png" width="200" height="350"> | Beautiful onboarding experience introducing Abhira's features |
-| **Dashboard** | <img src="assets/women.jpg" width="200" height="350"> | Main dashboard with emergency SOS button and quick actions |
-| **Emergency SOS** | <img src="assets/phone_red.png" width="200" height="350"> | One-tap emergency alert system with location sharing |
-| **AI Assistant** | <img src="assets/lottie/aibot.json" width="200" height="350"> | Intelligent AI chatbot for safety guidance |
-| **Shake Detection** | <img src="assets/shake.png" width="200" height="350"> | Motion-based automatic alert triggering |
+| **Onboarding** | <img src="assets/splash_can.png" width="200" height="350"> | Beautiful onboarding experience introducing Abhira's features |
+| **Dashboard** | <img src="assets/dash_can.png" width="200" height="350"> | Main dashboard with emergency SOS button and quick actions |
+| **Emergency SOS** | <img src="assets/emergency_can.png" width="200" height="350"> | One-tap emergency alert system with location sharing |
+| **AI Assistant** | <img src="assets/ai_assis_can.png" width="200" height="350"> | Intelligent AI chatbot for safety guidance |
+| **Shake Detection** | <img src="assets/s2s_can.png" width="200" height="350"> | Motion-based automatic alert triggering |
 | **Share App** | <img src="assets/qr.png" width="200" height="350"> | QR code sharing feature for app distribution |
 
 *Note: Screenshots show the actual app interface. The QR code (`assets/qr.png`) is used in the app sharing feature.*
