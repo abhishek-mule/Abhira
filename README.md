@@ -1,7 +1,7 @@
 # Abhira - Women's Safety App
 
 <h1 align="center">
-  <img width="20%" height="50%" alt="Abhira" src="https://i.ibb.co/Swp8mbbY/abhira-logo.png">
+  <img width="20%" height="50%" alt="Abhira" src="assets/abhira.png">
 </h1>
 
 <h1 align="center">🛡️ Abhira - Your Safety, Our Priority</h1>
@@ -9,7 +9,7 @@
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
 
 <p align="center">
-  <img src="https://ibb.co/0j7qBsdq" width="90%" height="400" />
+  <img src="assets/branding.png" width="90%" height="400" />
 </p>
 
 ![-----------------------------------------------------](https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png)
