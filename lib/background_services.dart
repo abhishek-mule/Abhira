@@ -43,8 +43,10 @@ Future<bool> onStart(ServiceInstance service) async {
         if (enabled) {
           print("WhatsApp sharing enabled, getting location...");
           try {
+            // Using geolocator 11.x API - no deprecated parameters
             final pos = await Geolocator.getCurrentPosition(
-                desiredAccuracy: LocationAccuracy.high);
+              desiredAccuracy: LocationAccuracy.high,
+            );
             print("Location obtained: ${pos.latitude}, ${pos.longitude}");
             await shareLocationOnWhatsApp(pos.latitude, pos.longitude);
           } catch (e) {

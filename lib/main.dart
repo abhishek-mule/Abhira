@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart';
@@ -16,9 +17,12 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'dart:math' as math;
 
-void main() async {
+Future<void> main() async {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Load environment variables
+  await dotenv.load(fileName: '.env');
 
   // Initialize app with comprehensive error handling
   await _initializeApp();
@@ -195,8 +199,9 @@ class MyApp extends StatelessWidget {
         return MediaQuery(
           data: MediaQuery.of(context).copyWith(
             // Limit text scaling for consistent UI
-            textScaleFactor:
-                MediaQuery.of(context).textScaleFactor.clamp(0.8, 1.3),
+            textScaler: TextScaler.linear(
+              MediaQuery.of(context).textScaler.scale(1.0).clamp(0.8, 1.3),
+            ),
           ),
           child: widget ?? const SizedBox.shrink(),
         );
@@ -817,7 +822,7 @@ class AppUtils {
     double c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a));
     return earthRadius * c;
   }
- 
+
   static double _degreesToRadians(double degrees) {
     return degrees * math.pi / 180;
   }

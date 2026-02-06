@@ -1,19 +1,38 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GeminiService {
   static final GeminiService _instance = GeminiService._internal();
   factory GeminiService() => _instance;
   GeminiService._internal();
 
-  // Initialize Gemini with the API key
-  static const String _apiKey = 'AIzaSyBDlmB4m1SlxiGw_H0eQ70OchnyWyfXUzc';
-  late final GenerativeModel _model = GenerativeModel(
-    model: 'gemini-2.0-flash',
-    apiKey: _apiKey,
-  );
+  /// Initialize Gemini with the API key from environment variables
+  /// API key should be stored in .env file as GEMINI_API_KEY
+  late final GenerativeModel _model;
+
+  bool _isInitialized = false;
+
+  void _initializeModel() {
+    if (_isInitialized) return;
+
+    final apiKey = dotenv.env['GEMINI_API_KEY'] ?? '';
+
+    if (apiKey.isEmpty) {
+      throw Exception('GEMINI_API_KEY not found in .env file. '
+          'Please add your API key to the .env file.');
+    }
+
+    _model = GenerativeModel(
+      model: 'gemini-2.0-flash',
+      apiKey: apiKey,
+    );
+    _isInitialized = true;
+  }
 
   /// Generate a response using Gemini AI directly
   Future<String> generateResponse(String prompt) async {
+    _initializeModel();
+
     try {
       final content = [Content.text(prompt)];
       final response = await _model.generateContent(content);
