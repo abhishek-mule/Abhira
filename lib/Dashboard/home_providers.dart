@@ -8,6 +8,7 @@ import 'package:battery_plus/battery_plus.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:abhira/services/evidence_service.dart';
 
 /// Models
 class SafetyContext {
@@ -190,15 +191,21 @@ class SOSStateNotifier extends StateNotifier<bool> {
       if (state) {
         await _player.stop();
         state = false;
+        // Stop Evidence Collection
+        await EvidenceService().stopRecording();
+        
         Fluttertoast.showToast(
-          msg: 'Emergency alert stopped',
+          msg: 'Emergency alert & recording stopped',
           backgroundColor: const Color(0xFF10B981),
         );
       } else {
         await _player.play(AssetSource('emergency.mp3'));
         state = true;
+        // Start Evidence Collection
+        await EvidenceService().startEmergencyRecording();
+
         Fluttertoast.showToast(
-          msg: '🚨 EMERGENCY ALERT ACTIVE',
+          msg: '🚨 EMERGENCY ALERT & RECORDING ACTIVE',
           backgroundColor: const Color(0xFFEF4444),
           toastLength: Toast.LENGTH_LONG,
         );

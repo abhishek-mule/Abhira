@@ -76,7 +76,10 @@ coverage/
 # Exclude build outputs in plugin packages
 **/build/
 
-# Keep assets tracked
-# (do not ignore the assets/ folder)
+# Environment variables
+.env
+.env.secret
+*.env
+
 !assets/
 !assets/**

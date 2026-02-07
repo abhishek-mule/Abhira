@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:abhira/Dashboard/Settings/About.dart';
 import 'package:abhira/Dashboard/Settings/ChangePin.dart';
 import 'package:abhira/Dashboard/Settings/ShareAppScreen.dart';
+import 'package:abhira/Dashboard/Settings/SMSTestScreen.dart';
 import 'package:abhira/background_services.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -276,6 +277,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Image.asset(
                 "assets/share.png",
                 height: 24,
+              )),
+            ),
+            trailing: Icon(Icons.arrow_forward_ios, size: 16),
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SMSTestScreen(),
+                ),
+              );
+            },
+            title: Text("Test SMS"),
+            subtitle: Text("Debug SMS functionality (for development)"),
+            leading: CircleAvatar(
+              backgroundColor: Colors.orange[100],
+              child: Center(
+                  child: Icon(
+                Icons.sms_rounded,
+                color: Colors.orange,
+                size: 24,
               )),
             ),
             trailing: Icon(Icons.arrow_forward_ios, size: 16),

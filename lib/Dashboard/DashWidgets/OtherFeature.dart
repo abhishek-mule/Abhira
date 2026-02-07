@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/CameraDetection.dart';
-import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/Complaint.dart';
 import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/FakeCall.dart';
+
 import 'package:abhira/Dashboard/DashWidgets/OtherFeatures/SelfDefence.dart';
 
 class OtherFeature extends StatelessWidget {
@@ -21,11 +21,6 @@ class OtherFeature extends StatelessWidget {
             width: MediaQuery.of(context).size.width * 0.65,
             margin: const EdgeInsets.only(right: 12),
             child: const FakeCall(),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.65,
-            margin: const EdgeInsets.only(right: 12),
-            child: const Complaint(),
           ),
           Container(
             width: MediaQuery.of(context).size.width * 0.65,

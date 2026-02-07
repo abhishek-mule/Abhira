@@ -1,18 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:abhira/Dashboard/ContactScreens/MyContacts.dart';
 import 'package:abhira/Dashboard/ContactScreens/phonebook_view.dart';
 import 'package:abhira/Dashboard/AIAssistant/ai_assistant_screen.dart';
 import 'package:abhira/Dashboard/DashWidgets/Emergency.dart';
 import 'package:abhira/Dashboard/DashWidgets/OtherFeature.dart';
-import 'package:abhira/Dashboard/DashWidgets/BookCab.dart';
 import 'package:abhira/Dashboard/DashWidgets/LiveSafe.dart';
-import 'package:abhira/Dashboard/DashWidgets/Scream.dart';
 import 'package:abhira/Dashboard/DashWidgets/SafeHome.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
 import 'home_providers.dart';
 
 /// Home screen refactored with proper architecture
@@ -76,48 +72,13 @@ class _HomeState extends ConsumerState<Home> with WidgetsBindingObserver {
                 _buildSectionHeader("Safety Features"),
                 const OtherFeature(),
                 _buildSectionDivider(),
-                _buildSectionHeader("Get Home Safe"),
-                const BookCab(),
-                _buildSectionDivider(),
                 _buildSectionHeader("Nearby Safety"),
                 const LiveSafe(),
                 _buildSectionDivider(),
                 _buildSectionHeader("Personal Safety"),
-                const Scream(),
                 const SafeHome(),
                 const SizedBox(height: 100), // Add extra space for the chatbot
               ],
-            ),
-          ),
-          // Fixed chatbot in bottom-right corner
-          Positioned(
-            key: ValueKey('home_chatbot'), // Add unique key
-            bottom: 20,
-            right: 20,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => AIAssistantScreen()),
-                );
-              },
-              child: Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    ),
-                  ],
-                ),
-                child: Lottie.asset(
-                  'assets/lottie/aibot.json',
-                  fit: BoxFit.cover,
-                ),
-              ),
             ),
           ),
         ],
@@ -490,25 +451,31 @@ class SOSButton extends ConsumerWidget {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                AvatarGlow(
-                  glowColor: Colors.white,
-                  duration: const Duration(milliseconds: 2000),
-                  animate: alertState,
-                  child: Container(
-                    width: 72,
-                    height: 72,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Icon(
-                        alertState
-                            ? Icons.stop_circle_rounded
-                            : Icons.warning_rounded,
-                        color: const Color(0xFFEF4444),
-                        size: 40,
-                      ),
+                // Simple animated container instead of AvatarGlow
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: 72,
+                  height: 72,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: alertState
+                        ? [
+                            BoxShadow(
+                              color: Colors.white.withOpacity(0.6),
+                              blurRadius: 20,
+                              spreadRadius: 5,
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: Center(
+                    child: Icon(
+                      alertState
+                          ? Icons.stop_circle_rounded
+                          : Icons.warning_rounded,
+                      color: const Color(0xFFEF4444),
+                      size: 40,
                     ),
                   ),
                 ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/BusStationCard.dart';
 import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/HospitalCard.dart';
+import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/HeatmapCard.dart';
+import 'package:abhira/Dashboard/DashWidgets/SafeMapScreen.dart';
 import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/PharmacyCard.dart';
 import 'package:abhira/Dashboard/DashWidgets/LiveSafeSpots/PoliceStationCard.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,6 +20,9 @@ class LiveSafe extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           physics: BouncingScrollPhysics(),
           children: [
+            HeatmapCard(onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => SafeMapScreen()));
+            }),
             HospitalCard(openMapFunc: openMap),
             PoliceStationCard(openMapFunc: openMap),
             PharmacyCard(openMapFunc: openMap),

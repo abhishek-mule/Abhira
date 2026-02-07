@@ -21,7 +21,11 @@ import 'package:abhira/Dashboard/Settings/SettingsScreen.dart';
 import 'package:abhira/Dashboard/Settings/About.dart';
 import 'package:abhira/background_services.dart';
 import 'package:abhira/design_system.dart';
-import 'package:sensors_plus/sensors_plus.dart'; // Add this to pubspec.yaml
+import 'package:sensors_plus/sensors_plus.dart'; 
+import 'package:abhira/services/evidence_service.dart';
+import 'package:abhira/services/voice_sos_service.dart';
+import 'package:abhira/services/sms_service.dart';
+
 
 class Dashboard extends StatefulWidget {
   final int pageIndex;
@@ -93,6 +97,14 @@ class _DashboardState extends State<Dashboard>
     checkAlertSharedPreferences();
     checkPermission();
     _initShakeDetection();
+    
+    // Initialize Voice SOS (With auto-restart logic inside service)
+    VoiceSOSService().init(onSOSTriggered: () {
+      if (mounted && !alerted) {
+         debugPrint("Voice SOS Detected! Sending Alert...");
+         sendAlertSMS(true);
+      }
+    });
   }
 
   @override
@@ -143,8 +155,8 @@ class _DashboardState extends State<Dashboard>
         _shakeCount = 0;
       });
 
-      // Trigger SOS after 1 shake (single shake detection)
-      if (_shakeCount >= 1) {
+      // Trigger SOS after 3 rapid shakes (prevent accidental triggers)
+      if (_shakeCount >= 3) {
         _onShakeDetected();
         _shakeCount = 0; // Reset to prevent multiple triggers
       }
@@ -455,152 +467,7 @@ class _DashboardState extends State<Dashboard>
     );
   }
 
-  // Abhira AI FAB - Positioned above bottom navigation, right side with glowing halo effect
-  Widget _buildAbhiraAIFab() {
-    return Semantics(
-      label: 'Open Abhira AI Assistant',
-      button: true,
-      hint: 'Tap to chat with Abhira AI safety assistant',
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF6366F1), // Indigo
-              Color(0xFF8B5CF6), // Purple
-            ],
-          ),
-          boxShadow: [
-            // Main shadow for depth
-            BoxShadow(
-              color: Color(0xFF6366F1).withOpacity(0.4),
-              blurRadius: 12,
-              spreadRadius: 2,
-              offset: Offset(0, 4),
-            ),
-            // Glowing halo effect - multiple soft shadows
-            BoxShadow(
-              color: Color(0xFF6366F1).withOpacity(0.2),
-              blurRadius: 20,
-              spreadRadius: 1,
-              offset: Offset(0, 2),
-            ),
-            BoxShadow(
-              color: Color(0xFF8B5CF6).withOpacity(0.15),
-              blurRadius: 25,
-              spreadRadius: 0,
-              offset: Offset(0, 1),
-            ),
-            // Subtle white inner glow
-            BoxShadow(
-              color: Colors.white.withOpacity(0.3),
-              blurRadius: 6,
-              spreadRadius: -2,
-              offset: Offset(-1, -1),
-            ),
-          ],
-        ),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              HapticFeedback.lightImpact();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AIAssistantScreen()),
-              );
-            },
-            customBorder: CircleBorder(),
-            child: Center(
-              child: Icon(
-                Icons.smart_toy_rounded,
-                color: Colors.white,
-                size: 24,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFloatingActionButton() {
-    if (currentPage == 1) {
-      // Contacts screen - Add contact FAB
-      return Semantics(
-        label: 'Add new contact',
-        button: true,
-        child: FloatingActionButton(
-          backgroundColor: Colors.white,
-          elevation: 4,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PhoneBook()),
-            );
-          },
-          child: Icon(
-            Icons.person_add_rounded,
-            color: Color(0xFFEF4444),
-            size: 28,
-          ),
-        ),
-      );
-    } else {
-      // Home screen - AI Assistant FAB (bottom right corner, next to SOS)
-      return Semantics(
-        label: 'Open AI Assistant',
-        button: true,
-        hint: 'Tap to chat with Abhira AI safety assistant',
-        child: Container(
-          width: 60,
-          height: 60,
-          margin: EdgeInsets.only(
-              bottom: 100, right: 16), // Position next to SOS FAB
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xFF6366F1), Color(0xFF8B5CF6)],
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Color(0xFF6366F1).withOpacity(0.3),
-                blurRadius: 16,
-                offset: Offset(0, 6),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AIAssistantScreen()),
-                );
-              },
-              customBorder: CircleBorder(),
-              child: Center(
-                child: Icon(
-                  Icons.smart_toy_rounded,
-                  color: Colors.white,
-                  size: 28,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  // Bottom Navigation: Home (left) | SOS (center) | Contacts/Profile (right)
+  // Bottom Navigation: Home (left) | SOS (center) | Contacts (right)
   Widget _buildBottomNavigation() {
     return BottomAppBar(
       shape: CircularNotchedRectangle(),
@@ -610,12 +477,10 @@ class _DashboardState extends State<Dashboard>
       shadowColor: Colors.black.withOpacity(0.1),
       child: Container(
         height: 60,
-        padding: EdgeInsets.symmetric(
-            horizontal: 24), // Increased padding for better spacing
+        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Left side: Home
             Expanded(
               flex: 1,
               child: _buildBottomNavItem(
@@ -625,9 +490,7 @@ class _DashboardState extends State<Dashboard>
                 isSelected: currentPage == 0,
               ),
             ),
-            // Spacer for center-docked FAB
-            SizedBox(width: 80), // Space for the center-docked SOS FAB
-            // Right side: Contacts/Profile
+            const SizedBox(width: 80), // Space for the center-docked SOS FAB
             Expanded(
               flex: 1,
               child: _buildBottomNavItem(
@@ -668,7 +531,7 @@ class _DashboardState extends State<Dashboard>
               },
           borderRadius: BorderRadius.circular(12),
           child: Container(
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -676,112 +539,19 @@ class _DashboardState extends State<Dashboard>
                 Icon(
                   icon,
                   size: 24,
-                  color:
-                      isSelected ? AppColors.primary : AppColors.textSecondary,
+                  color: isSelected ? const Color(0xFFEF4444) : Colors.grey,
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(
                   label,
                   style: TextStyle(
                     fontSize: 10,
                     fontWeight:
                         isSelected ? FontWeight.w600 : FontWeight.normal,
-                    color: isSelected
-                        ? AppColors.primary
-                        : AppColors.textSecondary,
+                    color: isSelected ? const Color(0xFFEF4444) : Colors.grey,
                   ),
                 ),
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildModernBottomBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-            offset: Offset(0, -4),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: Container(
-          height: 70,
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(
-                icon: Icons.home_rounded,
-                label: 'Home',
-                index: 0,
-              ),
-              SizedBox(width: 80), // Space for FAB
-              _buildNavItem(
-                icon: Icons.contacts_rounded,
-                label: 'Contacts',
-                index: 1,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    required int index,
-  }) {
-    final isSelected = currentPage == index;
-
-    return Expanded(
-      child: Semantics(
-        label: '$label tab',
-        selected: isSelected,
-        button: true,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              if (currentPage != index) {
-                HapticFeedback.lightImpact();
-                setState(() {
-                  currentPage = index;
-                });
-              }
-            },
-            borderRadius: BorderRadius.circular(8),
-            child: SizedBox(
-              height: 36,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    icon,
-                    size: 20,
-                    color: isSelected ? Color(0xFFEF4444) : Color(0xFF9CA3AF),
-                  ),
-                  SizedBox(height: 1),
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w500,
-                      color: isSelected ? Color(0xFFEF4444) : Color(0xFF9CA3AF),
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
         ),
@@ -965,14 +735,16 @@ class _DashboardState extends State<Dashboard>
         // Replace {LOCATION} placeholder with actual Google Maps link
         String message = customMessage.replaceAll('{LOCATION}', mapsLink);
 
-        await _sendWhatsAppMessage(message, numbers);
-
+        // Show immediate feedback to user
         Fluttertoast.showToast(
-          msg: 'SOS Alert Sent via WhatsApp!',
-          backgroundColor: Color(0xFF10B981),
+          msg: '🚨 Sending SOS Alert...',
+          backgroundColor: Color(0xFFEF4444),
           textColor: Colors.white,
           fontSize: 16,
         );
+
+        // Run heavy operations in background to avoid blocking UI
+        _sendSOSInBackground(message, numbers, mapsLink);
       } else {
         // Safe notification / False alarm
         String message = "✅ FALSE ALARM - I am safe\n\n"
@@ -981,6 +753,9 @@ class _DashboardState extends State<Dashboard>
             "Thank you for your concern.";
 
         await _sendWhatsAppMessage(message, numbers);
+        
+        // Stop Evidence Recording
+        await EvidenceService().stopRecording();
 
         Fluttertoast.showToast(
           msg: "Contacts notified via WhatsApp",
@@ -1004,6 +779,61 @@ class _DashboardState extends State<Dashboard>
         textColor: Colors.white,
         fontSize: 16,
       );
+    }
+  }
+
+  // Background method to handle SOS operations without blocking UI
+  void _sendSOSInBackground(String message, List<String> numbers, String mapsLink) async {
+    try {
+      // 1. Start SMS sending FIRST (asynchronous, non-blocking)
+      debugPrint("📱 Initiating SMS send to ${numbers.length} contacts...");
+      Future.microtask(() async {
+        bool smsSuccess = await SMSService().sendSOS(
+          numbers, 
+          message, 
+          locationLink: mapsLink,
+          delayAfterWhatsApp: 0, // No delay needed now as we reordered
+        );
+        if (smsSuccess) {
+          debugPrint("✅ SMS sent successfully in background");
+        } else {
+          debugPrint("⚠️ SMS sending had issues (check logs)");
+        }
+      });
+      
+      // 2. Start Evidence Recording (asynchronous, non-blocking)
+      Future.microtask(() async {
+        await EvidenceService().startEmergencyRecording();
+        debugPrint("📹 Evidence recording started in background");
+      });
+
+      // 3. Show success message (immediate)
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: '🚨 SOS Alert Initiated! Sending SMS & Recording...',
+          backgroundColor: Color(0xFFEF4444),
+          textColor: Colors.white,
+          fontSize: 16,
+          toastLength: Toast.LENGTH_LONG,
+        );
+      }
+
+      // 4. Send via WhatsApp (context-switching, should be last)
+      // We don't await this if it's the last operation, or we await it but tasks before it are already started
+      await _sendWhatsAppMessage(message, numbers);
+      
+      debugPrint("✅ Background SOS process completed");
+
+    } catch (e) {
+      debugPrint("❌ Error in background SOS: $e");
+      if (mounted) {
+        Fluttertoast.showToast(
+          msg: 'Error sending SOS: ${e.toString()}',
+          backgroundColor: Color(0xFFEF4444),
+          textColor: Colors.white,
+          fontSize: 16,
+        );
+      }
     }
   }
 
